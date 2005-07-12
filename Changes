@@ -1,4 +1,10 @@
 Revision history for JavaScript class HTTP.Query.
 
+0.02
+      - Minor documentation tweaks.
+      - Added more tests.
+      - Fixed act() to properly iterate over all GET arguments.
+      - Added toString() method.
+
 0.01  2005-07-12T06:35:39
       - Initial public release.

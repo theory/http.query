@@ -6,8 +6,7 @@
 </head>
 <body>
 <pre id="test"><script type="text/javascript">
-     //plan({ tests: 17 });
-plan({ noPlan: true });
+plan({ tests: 31 });
 var qry = new HTTP.Query("?foo=bar");
 if (Object.isPrototypeOf) isaOK(qry, 'HTTP.Query');
 else skip("Cannot check inheritance without isPrototypeOf()", 1);
@@ -36,6 +35,12 @@ qry.act(function (key, val) {
     return true;
 });
 
+qry.add('hey', 'you');
+is(qry.get('hey'), 'you', "Value of 'hey' should be 'you'");
+qry.add('hey', 'me');
+isDeeply(qry.get('hey'), ['you', 'me'],
+         "Value of 'hey' should be ['you', 'me']");
+
 qry.clear();
 is(qry.get('foo'), undefined, "'foo' should now be undefined");
 
@@ -58,6 +63,21 @@ isDeeply(qry.get('foo'), ['bar', 'bat'], "Now 'foo;foo' should be an array'");
 qry = new HTTP.Query("?foo=bar;foo=bat;bit=bat");
 isDeeply(qry.get('foo'), ['bar', 'bat'], "Now 'foo;foo' should be an array'");
 is(qry.get('bit'), 'bat', "And 'bit' should be 'bat'");
+
+qry = new HTTP.Query("?foo=bar;foo=bat");
+is(qry.toString(), "?foo=bar;foo=bat", "toString() should work");
+is(qry, qry.toString(), "Implicit stringification should work");
+
+qry = new HTTP.Query("?foo=bar&foo=bat");
+is(qry.toString(), "?foo=bar;foo=bat", "toString() should convert &");
+
+qry = new HTTP.Query("?foo=bar&bee=bat");
+ok(qry.toString() == "?foo=bar;bee=bat"
+   || qry.toString() == "?bee=bat;foo=bar",
+   "toString() should have all args");
+
+
+
 </script></pre>
 </body>
 </html>

@@ -1,6 +1,6 @@
 =head1 Name
 
-HTTP.Query - Easy access to the contents of a GET query string
+HTTP.Query - Easy GET query string management
 
 =head1 Synopsis
 
@@ -8,28 +8,24 @@ HTTP.Query - Easy access to the contents of a GET query string
 
   var query = new HTTP.Query(location.search);
 
-  query->set('From', 'david@kineticode.com');
+  query.set('from', 'david@kineticode.com');
+  query.add('to', 'you@example.com');
+  query.add('to', 'me@example.com');
 
-  query->add('Cookie' 'One Cookie');
-  query->add('Cookie' => 'Another Cookie');
-
-  query.act(function (key, val) {
-      document.write(key + ': ' + val);
-  });
+  location.search = query.toString();
 
 =head1 Description
 
-This class parses a GET query string, pulling out its various arguments and
-arranging them into an object. If a given query key is specified multiple
-times, then all of the values will be stored in an array for that key.
+This class parses a GET query string, pulling out its various arguments,
+unescaping their encodings, and arranging them into an object. If a given
+query key is specified multiple times, then all of the values will be stored
+in an array for that key.
 
 =head1 Constructor
 
-=head3 new()
+  var query = new HTTP.Query(queryString);
 
-  var query = HTTP.Query(queryString);
-
-Returns a new C<HTTP.QSuery> object that has parsed the queryString passed
+Returns a new C<HTTP.Query> object that has parsed the C<queryString> passed
 as the single argument.
 
 =head3 get()
@@ -63,20 +59,29 @@ Clears the query object of all values.
 
   query.add(key, value);
 
-Adds a new value to the query object. This method is the sole interface for
+Adds a new value to the query object. This method is the best interface for
 adding mutiple values for a single key. Once a key has multiple values, those
-values will be returned as an array reference by a call to C<get()>.
+values will be returned as an array by a call to C<get()>.
 
 =head3 act()
 
   query.act(function);
 
-Pass a function reference to this method to have it iterate over all of the
-key/value pairs in the query object. Keys with multiple values will trigger
-the execution of the function multiple times, once for each value. The
-function should expect two arguments: a key and a value. Iteration terminates
-when the code reference returns false, so be sure to have it return a true
-value if you want it to iterate over every value in the query object.
+Pass a function to this method to have it iterate over all of the key/value
+pairs in the query object. Keys with multiple values will trigger the
+execution of the function multiple times, once for each value. The function
+should expect two arguments: a key and a value. Iteration terminates when the
+code reference returns false, so be sure to have it return a true value if you
+want it to iterate over every value in the query object.
+
+=head3 toString()
+
+  alert(qry.toString());
+  alert(qry);
+
+This method overrides the default toString() method inherited from Object to
+return a properly-formatted and encoded GET query string. Note that this
+method uses ";" as the query string separator, rather than "&".
 
 =head1 Author
 
