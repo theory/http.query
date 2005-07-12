@@ -1,4 +1,4 @@
-HTTP.Query version 0.02
+HTTP.Query version 0.03
 =======================
 
 This JavaScript class parses out the parts of a GET query string for easy
