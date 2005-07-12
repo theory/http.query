@@ -1,0 +1,95 @@
+=head1 Name
+
+HTTP.Query - Easy access to the contents of a GET query string
+
+=head1 Synopsis
+
+  JSAN.use('HTTP.Query');
+
+  var query = new HTTP.Query(location.search);
+
+  query->set('From', 'david@kineticode.com');
+
+  query->add('Cookie' 'One Cookie');
+  query->add('Cookie' => 'Another Cookie');
+
+  query.act(function (key, val) {
+      document.write(key + ': ' + val);
+  });
+
+=head1 Description
+
+This class parses a GET query string, pulling out its various arguments and
+arranging them into an object. If a given query key is specified multiple
+times, then all of the values will be stored in an array for that key.
+
+=head1 Constructor
+
+=head3 new()
+
+  var query = HTTP.Query(queryString);
+
+Returns a new C<HTTP.QSuery> object that has parsed the queryString passed
+as the single argument.
+
+=head3 get()
+
+  var value = query.get(key);
+
+Gets the value stored for a given key in the table. If a key has multiple
+values, they will all be returned in an array object.
+
+=head3 set()
+
+  query.set(key, value);
+
+Takes key and value arguments and sets the value for that key. Previous values
+for that key will be discarded.
+
+=head3 unset()
+
+  query.unset(key);
+
+Takes a single key argument and deletes that key from the query object, so
+that none of its values will be in the object any longer.
+
+=head3 clear()
+
+  query.clear();
+
+Clears the query object of all values.
+
+=head3 add()
+
+  query.add(key, value);
+
+Adds a new value to the query object. This method is the sole interface for
+adding mutiple values for a single key. Once a key has multiple values, those
+values will be returned as an array reference by a call to C<get()>.
+
+=head3 act()
+
+  query.act(function);
+
+Pass a function reference to this method to have it iterate over all of the
+key/value pairs in the query object. Keys with multiple values will trigger
+the execution of the function multiple times, once for each value. The
+function should expect two arguments: a key and a value. Iteration terminates
+when the code reference returns false, so be sure to have it return a true
+value if you want it to iterate over every value in the query object.
+
+=head1 Author
+
+David Wheeler <david@kineticode.com>
+
+=head1 Copyright and License
+
+Copyright 2005 by David Wheeler.
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the Perl Artistic License or the GNU GPL.
+
+See L<http://www.perl.com/perl/misc/Artistic.html> and
+L<http://www.gnu.org/copyleft/gpl.html>.
+
+=cut

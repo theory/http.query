@@ -1,0 +1,63 @@
+<html>
+<head>
+  <script type="text/javascript" src="Test/Builder.js"></script>
+  <script type="text/javascript" src="Test/More.js"></script>
+  <script type="text/javascript" src="../lib/HTTP/Query.js"></script>
+</head>
+<body>
+<pre id="test"><script type="text/javascript">
+     //plan({ tests: 17 });
+plan({ noPlan: true });
+var qry = new HTTP.Query("?foo=bar");
+if (Object.isPrototypeOf) isaOK(qry, 'HTTP.Query');
+else skip("Cannot check inheritance without isPrototypeOf()", 1);
+is(qry.get('foo'), 'bar', "'foo' should be 'bar'");
+is(qry.get('woo'), undefined, "'woo' should be undefined");
+qry.set('woo', 'ick');
+is(qry.get('woo'), 'ick', "'woo' should now be 'ick'");
+qry.unset('woo');
+is(qry.get('woo'), undefined, "'woo' should be undefined");
+is(qry.get('foo'), 'bar', "'foo' should still be 'bar'");
+qry.act(function (key, val) {
+    is(key, 'foo', "Key passed to the action should be 'foo'");
+    is(val, 'bar', "Value passed to the action should be 'bar'");
+    return true;
+});
+
+qry.add('foo', 'wee');
+isaOK(qry.get('foo'), 'Array', "'foo' should now be an array");
+isDeeply(qry.get('foo'), ['bar', 'wee'],
+          "'foo' array should be ['bar', 'wee']");
+var i = 0;
+qry.act(function (key, val) {
+    is(key, 'foo', "Key passed to the action should be 'foo'");
+    if (i++ == 0) is(val, 'bar', "Value passed to the action should be 'bar'");
+    else is(val, 'wee', "Value passed to the action should be 'wee'");
+    return true;
+});
+
+qry.clear();
+is(qry.get('foo'), undefined, "'foo' should now be undefined");
+
+qry = new HTTP.Query("?foo=bar;bit=bat");
+is(qry.get('foo'), 'bar', "'foo' should be 'bar'");
+is(qry.get('bit'), 'bat', "'bit' should be 'bat'");
+is(qry.get('woo'), undefined, "'woo' should be undefined");
+
+qry = new HTTP.Query("?foo=bar&bit=bat");
+is(qry.get('foo'), 'bar', "'foo' should be 'bar'");
+is(qry.get('bit'), 'bat', "'bit' should be 'bat'");
+is(qry.get('woo'), undefined, "'woo' should be undefined");
+
+qry = new HTTP.Query("?foo=bar&foo=bat");
+isDeeply(qry.get('foo'), ['bar', 'bat'], "Now 'foo&foo' should be an array'");
+
+qry = new HTTP.Query("?foo=bar;foo=bat");
+isDeeply(qry.get('foo'), ['bar', 'bat'], "Now 'foo;foo' should be an array'");
+
+qry = new HTTP.Query("?foo=bar;foo=bat;bit=bat");
+isDeeply(qry.get('foo'), ['bar', 'bat'], "Now 'foo;foo' should be an array'");
+is(qry.get('bit'), 'bat', "And 'bit' should be 'bat'");
+</script></pre>
+</body>
+</html>
