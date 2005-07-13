@@ -6,7 +6,7 @@
 </head>
 <body>
 <pre id="test"><script type="text/javascript">
-plan({ tests: 31 });
+plan({ tests: 36 });
 var qry = new HTTP.Query("?foo=bar");
 if (Object.isPrototypeOf) isaOK(qry, 'HTTP.Query');
 else skip("Cannot check inheritance without isPrototypeOf()", 1);
@@ -66,18 +66,38 @@ is(qry.get('bit'), 'bat', "And 'bit' should be 'bat'");
 
 qry = new HTTP.Query("?foo=bar;foo=bat");
 is(qry.toString(), "?foo=bar;foo=bat", "toString() should work");
+is(qry.toString('&'), "?foo=bar&foo=bat", "toString('&') should work");
 is(qry, qry.toString(), "Implicit stringification should work");
 
 qry = new HTTP.Query("?foo=bar&foo=bat");
 is(qry.toString(), "?foo=bar;foo=bat", "toString() should convert &");
+is(qry.toString('&'), "?foo=bar&foo=bat", "toString('&') should retain &");
 
 qry = new HTTP.Query("?foo=bar&bee=bat");
 ok(qry.toString() == "?foo=bar;bee=bat"
    || qry.toString() == "?bee=bat;foo=bar",
    "toString() should have all args");
 
+qry = new HTTP.Query('');
+is(qry.toString(), '', "An empty GET string is an empty GET string");
 
+qry = new HTTP.Query(null);
+is(qry.toString(), '', "An null results in an empty GET string");
 
+if (typeof window == 'undefined') {
+    // Masquerade as a browser.
+    window = { document: { location: { search: "?go=where" } } };
+    qry = new HTTP.Query;
+    is(qry.get('go'), 'where',
+    "The query should default to the browser search string");
+} else {
+    // There is no way to mock the window, document, or location object! :-(
+    // So we'll just do our best with a possible GET string.
+    var search = window.document.location.search.replace(/&/, ';');
+    qry = new HTTP.Query;
+    is(qry.toString(), search,
+    "The query should default to the browser search string");
+}
 </script></pre>
 </body>
 </html>

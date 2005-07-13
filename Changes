@@ -1,6 +1,10 @@
 Revision history for JavaScript class HTTP.Query.
 
 0.03
+      - The constructor now uses window.document.location.search as the
+        default query string if none is provided. Suggested by Marshall Roch.
+      - The toString() method now takes an optional argument to specify "&" as
+        an alternate argument delimiter.
 
 0.02  2005-07-12T18:22:26
       - Minor documentation tweaks.

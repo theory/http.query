@@ -8,39 +8,43 @@ HTTP.Query - Easy GET query string management
 
   var query = new HTTP.Query(location.search);
 
-  query.set('from', 'david@kineticode.com');
+  query.set('from', 'me@example.com');
   query.add('to', 'you@example.com');
-  query.add('to', 'me@example.com');
+  query.add('to', 'him@example.com');
 
   location.search = query.toString();
 
 =head1 Description
 
-This class parses a GET query string, pulling out its various arguments,
-unescaping their encodings, and arranging them into an object. If a given
-query key is specified multiple times, then all of the values will be stored
+This class parses a GET query string, pulling out its argument keys and values
+and unescaping their encodings, and arranges them into an object. If a given
+query key is specified multiple times, then all of its values will be stored
 in an array for that key.
 
 =head1 Constructor
 
+  var query = new HTTP.Query;
   var query = new HTTP.Query(queryString);
 
 Returns a new C<HTTP.Query> object that has parsed the C<queryString> passed
-as the single argument.
+as the single argument. If no query argument is passed and C<HTTP.Query> is
+running in a Web browser, C<window.document.location.search> will be used,
+instead. To initialize an empty C<HTTP.Query> object, pass a C<null> or empty
+string to the constructor.
 
 =head3 get()
 
   var value = query.get(key);
 
-Gets the value stored for a given key in the table. If a key has multiple
+Gets the value stored for a given key in the table. If the key has multiple
 values, they will all be returned in an array object.
 
 =head3 set()
 
   query.set(key, value);
 
-Takes key and value arguments and sets the value for that key. Previous values
-for that key will be discarded.
+Sets the value for a key. Any previous value or values for that key will be
+discarded.
 
 =head3 unset()
 
@@ -61,15 +65,18 @@ Clears the query object of all values.
 
 Adds a new value to the query object. This method is the best interface for
 adding mutiple values for a single key. Once a key has multiple values, those
-values will be returned as an array by a call to C<get()>.
+values will be returned from a call to C<get()> as an array.
 
 =head3 act()
 
-  query.act(function);
+  query.act(function (key, value) {
+      document.write(key + ' => ' + value);
+      return true;
+  });
 
 Pass a function to this method to have it iterate over all of the key/value
 pairs in the query object. Keys with multiple values will trigger the
-execution of the function multiple times, once for each value. The function
+execution of the function multiple times: once for each value. The function
 should expect two arguments: a key and a value. Iteration terminates when the
 code reference returns false, so be sure to have it return a true value if you
 want it to iterate over every value in the query object.
@@ -77,11 +84,16 @@ want it to iterate over every value in the query object.
 =head3 toString()
 
   alert(qry.toString());
+  location.search = query.toString('&');
   alert(qry);
 
-This method overrides the default toString() method inherited from Object to
-return a properly-formatted and encoded GET query string. Note that this
-method uses ";" as the query string separator, rather than "&".
+Overrides the default toString() method inherited from Object to return a
+properly-formatted and encoded GET query string. By default, it uses ";" as
+the query argument delimiter. Pass in "&" as the single argument to toString()
+for it to be used as the argument delimiter. Of course, when the C<HTTP.Query>
+object itself is used in a string context, thus implicitly calling toString()
+";" will be the delimiter; call toString("&") explicitly to use "&" as the
+delimiter.
 
 =head1 Author
 
