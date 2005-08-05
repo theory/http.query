@@ -8,7 +8,12 @@ my $build = Module::Build::JSAN->new(
     dist_abstract  => 'Easy GET query string management',
     recommends     => {
         JSAN       => 0.03,
-    }
+    },
+    keywords       => [qw(
+        get
+        query
+        cgi
+    )],
 );
 
 $build->create_build_script;
