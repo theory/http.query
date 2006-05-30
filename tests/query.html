@@ -10,6 +10,7 @@ plan({ tests: 36 });
 var qry = new HTTP.Query("?foo=bar");
 if (Object.isPrototypeOf) isaOK(qry, 'HTTP.Query');
 else skip("Cannot check inheritance without isPrototypeOf()", 1);
+canOK(qry, 'get');
 is(qry.get('foo'), 'bar', "'foo' should be 'bar'");
 is(qry.get('woo'), undefined, "'woo' should be undefined");
 qry.set('woo', 'ick');
