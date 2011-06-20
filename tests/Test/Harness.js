@@ -1,4 +1,3 @@
-// # $Id$
 
 // Set up namespace.
 if (typeof self != 'undefined') {

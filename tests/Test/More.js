@@ -1,4 +1,3 @@
-// # $Id$
 // Create a namespace for ourselves.
 
 // Set up package.

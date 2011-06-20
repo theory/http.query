@@ -1,4 +1,3 @@
-// # $Id$
 
 if (typeof JSAN != 'undefined') JSAN.use('Test.Harness');
 
