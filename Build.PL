@@ -1,4 +1,3 @@
-use lib "$ENV{HOME}/dev/jsan/Module-Build-JSAN/trunk/lib";
 use Module::Build::JSAN;
 
 my $build = Module::Build::JSAN->new(

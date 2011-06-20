@@ -1,5 +1,8 @@
 Revision history for JavaScript class HTTP.Query.
 
+0.04
+      - Moved repostitory to [GitHub](https://github.com/theory/class-meta/).
+
 0.03  2005-07-13T02:53:51
       - The constructor now uses window.document.location.search as the
         default query string if none is provided. Suggested by Marshall Roch.
